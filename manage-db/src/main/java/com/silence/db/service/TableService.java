@@ -49,33 +49,38 @@ public class TableService {
     }
 
 
-    /**
-     * updateTableData(更新表数据)
-     *
-     * @param tableCode 表编码
-     * @param id        主键值（平台创建的表都会有一个id字段作为主键）
-     * @param data      void
-     * @throws
-     * @since 1.0.0
-     */
-    public void updateTableData(String tableCode, String id, Map<String, Object> data) {
-        tableDao.updateTableData(tableCode, id, data);
-    }
 
     /**
-     * addTableData(添加表数据)
+     * editTableData(编辑表数据)
      *
-     * @param tableCode 表编码
+     * @param tableId 表编号
      * @param data      数据map
      *                  void
      * @return
      * @throws
      * @since 1.0.0
      */
-    public Map<String, Object> addTableData(String tableCode, Map<String, Object> data) {
-        /*自动生成主键*/
-        data.put("ID", PKUtil.getPrimarykeyStr());
-        tableDao.addTableData(tableCode, data);
+    public Map<String, Object> editTableData(String tableId, Map<String, Object> data) {
+        Table table = tableDao.findOne(tableId);
+        String tableCode=table.getTableCode();
+        List<Column> columns = table.getColumns();
+        Column pk = columnService.findByTablePK(tableCode);
+
+        boolean isAdd=true;
+        for(Column c:columns){
+            if(!data.containsKey(c.getColumnCode())){
+                data.remove(c.getColumnCode());//排除无关参数
+            }
+        }
+
+        if(!data.containsKey(pk.getColumnCode())||(data.get(pk.getColumnCode())==null||data.get(pk.getColumnCode()).equals(""))){
+            //主键自动生成UUID
+            data.put(pk.getColumnCode(),PKUtil.getPrimarykeyStr());
+            tableDao.addTableData(tableCode,data);
+        }else{
+            //存在主键,修改
+            tableDao.updateTableData(tableCode,pk.getColumnCode(),data);
+        }
         return data;
     }
 

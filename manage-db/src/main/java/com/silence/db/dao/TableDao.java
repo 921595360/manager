@@ -54,7 +54,7 @@ public class TableDao{
 		jdbcTemplate.update("delete from "+tableCode+" where id= '"+id+"'");
 	}
 
-	public void updateTableData(String tableCode, String id, Map<String, Object> data) {
+	public void updateTableData(String tableCode, String pk, Map<String, Object> data) {
 		String sql="update "+tableCode+" t1 set ";
 		String setSql="";
 		for(String column:data.keySet()){
@@ -62,7 +62,7 @@ public class TableDao{
 		}
 		//去除第一个','号
 		setSql=setSql.substring(1);
-		sql+=setSql+" where id='"+id+"'";
+		sql+=setSql+" where "+pk+"='"+data.get(pk)+"'";
 		jdbcTemplate.update(sql);
 	}
 
@@ -77,7 +77,7 @@ public class TableDao{
 
 		String valueSql="";
 		for(String column:data.keySet()){
-			valueSql+=","+column+"='"+data.get(column)+"'";
+			valueSql+=",'"+data.get(column)+"'";
 		}
 		valueSql=valueSql.substring(1);
 

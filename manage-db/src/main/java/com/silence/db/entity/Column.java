@@ -64,12 +64,12 @@ public class Column implements Serializable {
 	@javax.persistence.Column(name="decimal_count")
     private int decimalCount;
     
-    /** 是否主键 */
-	@javax.persistence.Column(name="is_pk")
+    /** 是否主键 freemarker布尔类型显示需要特殊处理，此处修改存储类型回避该问题*/
+	@javax.persistence.Column(name="is_pk",columnDefinition = "integer",length = 1)
     private boolean isPK;
 	
 	/*能否为空*/
-	@javax.persistence.Column(name="null_able")
+	@javax.persistence.Column(name="null_able",columnDefinition = "integer",length = 1)
     private boolean nullAble;
 	
 	/**
@@ -89,6 +89,15 @@ public class Column implements Serializable {
 	/*顺序*/
 	@javax.persistence.Column(name="column_order")
 	private Integer columnOrder;
+
+	public static enum DataType{
+		DECIMAL(3),//小数
+		INTEGER(4),//整数
+		BIGINT(-5),//长整数
+		VARCHAR(12);//字符串
+		public final Integer value;
+		DataType(int value){this.value=value;}
+	}
 	
 
 	public String getColumnCode() {
@@ -188,6 +197,8 @@ public class Column implements Serializable {
 	public void setTableCode(String tableCode) {
 		this.tableCode = tableCode;
 	}
+
+
 
 	@Override
 	public String toString() {

@@ -30,4 +30,5 @@ public interface ColumnRepository extends CrudRepository<Column,String> {
 
 	public List<Column> findByTableCode(String tableCode);
 
+	Column findByTableCodeAndIsPK(String tableCode, boolean isPK);
 }

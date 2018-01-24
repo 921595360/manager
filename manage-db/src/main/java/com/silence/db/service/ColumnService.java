@@ -1,6 +1,7 @@
 package com.silence.db.service;
 
 import com.silence.db.dao.ColumnDao;
+import com.silence.db.dao.ColumnRepository;
 import com.silence.db.entity.Column;
 import com.silence.db.mysql.MySqlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ import java.util.List;
 public class ColumnService {
 	@Autowired
 	private ColumnDao columnDao;
+
+	@Autowired
+	private ColumnRepository columnRepository;
 	
 	@Autowired
 	private DataSource dataSource;
@@ -154,7 +158,13 @@ public class ColumnService {
 		Column column = this.findByColumnId(columnId);
 		deleteColumn(column, true);
 	}
-	
-	
-	
+
+
+	/**
+	 * 查找表的主键
+	 * @param tableCode
+	 */
+	public Column findByTablePK(String tableCode) {
+		return columnRepository.findByTableCodeAndIsPK(tableCode,true);
+	}
 }
